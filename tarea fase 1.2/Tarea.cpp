@@ -1,72 +1,75 @@
 #include <iostream>
 #include <string>
-#include <string_view>
 
-class Player
- {
- public:
- std::string p_name{};
- int p_hp{};
- int p_attack{};
- int p_defense{};
- int p_stamina{};
+class Entity{
+protected:
+    std::string name;
+    int hp;
+    int attack;
+    int defense;
+    int stamina;
+    
+public:
+    Entity(std::string n, int h, int a, int d, int s) : name(n), hp(h), attack(a), defense(d), stamina(s) {}
+    
+    void takeDamage(int amount) {
+        hp -= amount;
+        std::cout << name << " take " << amount << " of damage. your actual hp is " << hp << std::endl;
+        
+    }
+};
 
- Player(const std::string& playerName ="", int hp=0, int attack=0, int defense=0, int stamina=0) : 
- p_name{playerName}, p_hp{hp}, p_attack{attack}, p_defense{defense}, p_stamina{stamina}
- {
- }
- const std::string& getName() const { return p_name;}
- int getHp() const {return p_hp;}
- int getAttack() const {return p_attack;}
- int getDefense() const {return p_defense;}
- int getStamina() const {return p_stamina;}
- };
+class ability{
+    std::string a_name;
+    int costEnergy;
+    
+public:
+    ability(std::string n, int cost) : a_name(n), costEnergy(cost) {}
+    
+    virtual ~ability() {}
+    
+    virtual void activate() = 0;
+    
+    std::string getName() {return a_name;}
+};
 
-class Enemy
- {
- public:
- std::string e_name{};
- int e_hp{};
- int e_attack{};
- int e_defense{};
- int e_stamina{};
+class HeavyAttack : public ability {
+public:
+    HeavyAttack() : ability("Critic attack", 30) {}
+    
+    void activate() override{
+        std::cout << "[ABILITY] use " << a_name << ": Make 50 physics damage "
+    }
+};
 
- Enemy(const std::string& enemyName ="", int hp=0, int attack=0, int defense=0, int stamina=0) : 
- e_name{enemyName}, e_hp{hp}, e_attack{attack}, e_defense{defense}, e_stamina{stamina}
- {
- }
- const std::string& getName() const { return e_name;}
- int getHp() const {return e_hp;}
- int getAttack() const {return e_attack;}
- int getDefense() const {return e_defense;}
- int getStamina() const {return e_stamina;}
- };
+
+class player : public Entity {
+private:
+    int level;
+    
+public:
+    player(std::string n, int h, int l, int d, int s) : Entity(n, h, d, s), level(l) {}
+    
+    void usePotion() {
+        hp += 20;
+        std::cout << name << " use a potion. actual life: " << hp << std::endl;
+    }
+        
+};
+
+class Enemy : public Entity {
+public:
+    Enemy(std::string n, int h, int d) : Entity(n, h, d) {}
+    
+    void scream() {
+        std::cout << name << " make a awful noise " << std::endl;
+    }
+};
 
 
 int main()
- {
- std::string playerName {};
- int hp, attack, defense, stamina;
+{
+    std::cout<<"Hello World";
 
- std::cout<<"Put Your Player Name ";
- std::cin >>playerName;
-
- std::cout<<"Your stats ";
- std::cout<<"Hp ";
- std::cin>>hp;
-
- std::cout<<"Attack ";
- std::cin>>attack;
-
- std::cout<<"Defense ";
- std::cin>>defense;
-
- std::cout<<"Stamina ";
- std::cin>>stamina;
-
- Player p1(playerName, hp, attack, defense, stamina);
-
- std::cout<<"Player " <<p1.getName() << " created with " <<p1.getHp() << " HP.";
-
- return 0;
- }
+    return 0;
+}
